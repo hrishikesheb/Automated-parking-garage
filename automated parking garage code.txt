@@ -1,0 +1,75 @@
+#include <LiquidCrystal_I2C.h>  
+#include<Servo.h>   
+
+LiquidCrystal_I2C lcd(0x27,16,2); 
+Servo gate;        
+
+int slot1 = 5;     
+int slot2 = 4;     
+int gateSensor = 3; 
+
+
+void setup() 
+{
+ gate.attach(7);       
+ pinMode(slot1,INPUT);  
+ pinMode(slot2,INPUT);
+ pinMode(gateSensor,INPUT);
+      
+ lcd.init();     
+ lcd.backlight(); 
+
+}
+
+void loop() 
+{
+     
+
+   if( !(digitalRead(gateSensor)) && digitalRead(slot1) && digitalRead(slot2))   
+      lcd.setCursor(0,1);   
+      lcd.print("Available: sLOT1, sLOT2");  
+      
+      delay(1000);
+      gate.write(75); 
+      delay(100);   
+     }
+
+   if( !(digitalRead(gateSensor)) && !(digitalRead(slot1)) && digitalRead(slot2))  
+      {
+         lcd.setCursor(0,1);   
+         lcd.print("Available: sLOT2");  
+         
+         delay(1000);
+         gate.write(75); 
+         delay(100); 
+      }
+      
+   if( !(digitalRead(gateSensor)) && digitalRead(slot1) && !(digitalRead(slot2)))     
+       {
+         lcd.setCursor(0,1);   
+         lcd.print("Available: sLOT1");  
+
+         delay(1000);
+         gate.write(75);  
+         delay(100);                
+       }
+      
+
+  if( !(digitalRead(gateSensor)) && !(digitalRead(slot1)) && !(digitalRead(slot2)))
+        
+        {
+          lcd.clear();    
+          lcd.setCursor(0, 2);  
+          
+          lcd.print("Sorry,Parking Full");
+        }
+             
+  if( digitalRead(gateSensor))    
+        { 
+          lcd.clear();    
+          lcd.setCursor(0, 0);   
+          lcd.print("*Park Car Here*"); 
+          gate.write(5);       
+        }
+  
+}
